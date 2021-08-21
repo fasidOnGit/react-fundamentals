@@ -3,7 +3,23 @@
 
 import * as React from 'react'
 
-function UsernameForm({onSubmitUsername}) {
+function UsernameForm({onSubmitUsername, passRef}) {
+  // const [error, setError] = React.useState(null)
+  const [userName, setUserName] = React.useState('')
+  const handleSubmit = evt => {
+    evt.preventDefault()
+    onSubmitUsername(evt)
+  }
+  const handleChange = evt => {
+    setUserName(evt.target.value.toLowerCase())
+    // const isValid = evt.target.value === evt.target.value.toLowerCase()
+    // console.log(isValid)
+    // if (isValid) {
+    //   setError(null)
+    // } else {
+    //   setError(`Username must be lower case`)
+  }
+
   // 🐨 add a submit event handler here (`handleSubmit`).
   // 💰 Make sure to accept the `event` as an argument and call
   // `event.preventDefault()` to prevent the default behavior of form submit
@@ -20,10 +36,17 @@ function UsernameForm({onSubmitUsername}) {
   // 🐨 make sure to associate the label to the input.
   // to do so, set the value of 'htmlFor' prop of the label to the id of input
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <div>
         <label>Username:</label>
-        <input type="text" />
+        <input
+          value={userName}
+          ref={passRef}
+          name="username"
+          type="text"
+          onInput={handleChange}
+        />
+        {/* {error && <div style={{marginTop: '4px', color: 'red'}}>{error}</div>} */}
       </div>
       <button type="submit">Submit</button>
     </form>
@@ -31,8 +54,17 @@ function UsernameForm({onSubmitUsername}) {
 }
 
 function App() {
-  const onSubmitUsername = username => alert(`You entered: ${username}`)
-  return <UsernameForm onSubmitUsername={onSubmitUsername} />
+  const userNameRef = React.useRef()
+  const onSubmitUsername = evt => {
+    evt.preventDefault()
+    console.log(evt.target.elements.username.value)
+    alert(
+      `You entered: ${evt.target.username.value} ${userNameRef.current.value}`,
+    )
+  }
+  return (
+    <UsernameForm passRef={userNameRef} onSubmitUsername={onSubmitUsername} />
+  )
 }
 
 export default App
